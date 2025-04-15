@@ -1,8 +1,19 @@
-
 import { Link } from 'react-router-dom';
-import { Facebook, Github, Linkedin, Twitter, Instagram, Mail, Phone } from 'lucide-react';
+import { Facebook, Github, Linkedin, Twitter, Instagram, Mail, Phone, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import AdminLoginModal from '../admin/AdminLoginModal';
+import AdminPanel from '../admin/AdminPanel';
 
 const Footer = () => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+
+  const handleLogin = () => {
+    setShowLoginModal(false);
+    setShowAdminPanel(true);
+  };
+
   return (
     <footer className="bg-tech-dark border-t border-border/50 pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -70,17 +81,37 @@ const Footer = () => {
             <p className="text-muted-foreground text-sm">
               &copy; {new Date().getFullYear()} TechVisionForge. All rights reserved.
             </p>
-            <div className="flex space-x-6 text-sm mt-4 md:mt-0">
+            <div className="flex items-center space-x-6 text-sm mt-4 md:mt-0">
               <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Privacy Policy
               </Link>
               <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setShowLoginModal(true)}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
             </div>
           </div>
         </div>
       </div>
+      
+      <AdminLoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLogin={handleLogin}
+      />
+      
+      <AdminPanel
+        isOpen={showAdminPanel}
+        onClose={() => setShowAdminPanel(false)}
+      />
     </footer>
   );
 };
