@@ -1,20 +1,12 @@
 
 import { useState } from 'react';
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import FileUpload from './FileUpload';
-
-interface FormData {
-  name: string;
-  email: string;
-  company: string;
-  requirements: string;
-  file: File | null;
-}
+import FormField from './components/FormField';
+import { FormData } from './types/form-types';
+import { validateForm } from './utils/form-validation';
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -58,30 +50,17 @@ const ContactForm = () => {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
-    
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    if (!formData.requirements.trim()) newErrors.requirements = 'Please describe your project requirements';
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    const newErrors = validateForm(formData);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     
     setIsSubmitting(true);
-    
-    // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setIsSubmitting(false);
     
     toast({
@@ -108,45 +87,28 @@ const ContactForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="name" className={errors.name ? 'text-destructive' : ''}>
-            Name {errors.name && <span className="text-destructive">*</span>}
-          </Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Your name"
-            className={errors.name ? 'border-destructive' : ''}
-          />
-          {errors.name && (
-            <p className="text-destructive text-sm">{errors.name}</p>
-          )}
-        </div>
+        <FormField
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          error={errors.name}
+          placeholder="Your name"
+        />
         
-        <div className="space-y-2">
-          <Label htmlFor="email" className={errors.email ? 'text-destructive' : ''}>
-            Email {errors.email && <span className="text-destructive">*</span>}
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="your.email@example.com"
-            className={errors.email ? 'border-destructive' : ''}
-          />
-          {errors.email && (
-            <p className="text-destructive text-sm">{errors.email}</p>
-          )}
-        </div>
+        <FormField
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+          placeholder="your.email@example.com"
+        />
         
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="company">Company</Label>
-          <Input
-            id="company"
+        <div className="md:col-span-2">
+          <FormField
+            label="Company"
             name="company"
             value={formData.company}
             onChange={handleChange}
@@ -154,21 +116,16 @@ const ContactForm = () => {
           />
         </div>
         
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="requirements" className={errors.requirements ? 'text-destructive' : ''}>
-            Project Requirements {errors.requirements && <span className="text-destructive">*</span>}
-          </Label>
-          <Textarea
-            id="requirements"
+        <div className="md:col-span-2">
+          <FormField
+            label="Project Requirements"
             name="requirements"
+            type="textarea"
             value={formData.requirements}
             onChange={handleChange}
+            error={errors.requirements}
             placeholder="Tell us about your project and requirements"
-            className={`min-h-[120px] ${errors.requirements ? 'border-destructive' : ''}`}
           />
-          {errors.requirements && (
-            <p className="text-destructive text-sm">{errors.requirements}</p>
-          )}
         </div>
         
         <div className="md:col-span-2">
