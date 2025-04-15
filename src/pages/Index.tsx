@@ -7,6 +7,7 @@ import TeamSection from "@/components/sections/TeamSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { useEffect } from "react";
+import 'aos/dist/aos.css'; // Properly import AOS CSS
 
 const Index = () => {
   // Initialize animation on scroll
@@ -14,7 +15,6 @@ const Index = () => {
     const initAnimations = async () => {
       try {
         const AOS = (await import('aos')).default;
-        const 'aos/dist/aos.css';
         
         AOS.init({
           duration: 800,
