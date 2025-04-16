@@ -2,13 +2,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Linkedin, Twitter, Github } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import image from "../../../public/images/profileimage.avif"
 
 const teamMembers = [
   {
-    name: "Sophia Williams",
-    role: "Business Analyst",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    description: "Transforms business requirements into technical specifications for our development team.",
+    name: "Siva Gopi Reddy",
+    role: "Business Analyst & Tester",
+    image: image,
+    description: "Analyzes business needs and collaborates with stakeholders to ensure the product meets business goals. Also conducts testing to ensure high-quality standards.",
     social: {
       linkedin: "#",
       twitter: "#",
@@ -16,10 +17,10 @@ const teamMembers = [
     }
   },
   {
-    name: "Michael Chen",
+    name: "Prasad Chowdary",
     role: "Sr. Developer",
-    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    description: "Leads our development team with over 10 years of experience in enterprise applications.",
+    image: image,
+    description: "Leads the development team and drives the implementation of complex software solutions, ensuring efficient and scalable code.",
     social: {
       linkedin: "#",
       twitter: "#",
@@ -27,10 +28,10 @@ const teamMembers = [
     }
   },
   {
-    name: "Amelia Patel",
-    role: "UI/UX Designer",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    description: "Creates stunning user interfaces that enhance user experience and drive engagement.",
+    name: "Sagar",
+    role: "Sr. Tester",
+    image: image,
+    description: "Responsible for ensuring the product is bug-free and performs optimally by developing and executing test cases and reporting issues.",
     social: {
       linkedin: "#",
       twitter: "#",
@@ -38,10 +39,10 @@ const teamMembers = [
     }
   },
   {
-    name: "David Kim",
+    name: "Mohan Sai",
     role: "DevOps Engineer",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    description: "Ensures smooth deployment and continuous integration for all our projects.",
+    image: image,
+    description: "Manages and optimizes our infrastructure, automating deployment pipelines, and ensuring smooth integration and delivery processes.",
     social: {
       linkedin: "#",
       twitter: "#",
@@ -49,10 +50,10 @@ const teamMembers = [
     }
   },
   {
-    name: "Olivia Rodriguez",
-    role: "QA Tester",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
-    description: "Maintains our high quality standards through rigorous testing methodologies.",
+    name: "Moin Basha",
+    role: "Full Stack Developer",
+    image: image,
+    description: "Develops both the frontend and backend of the application, ensuring seamless integration and providing a complete solution from UI to server-side logic.",
     social: {
       linkedin: "#",
       twitter: "#",

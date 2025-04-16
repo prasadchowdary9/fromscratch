@@ -34,7 +34,7 @@ const Header = () => {
           to="/" 
           className="text-2xl font-bold text-gradient animate-pulse-soft"
         >
-          TechVisionForge
+          Fromscratchs.com
         </Link>
         
         {/* Desktop Navigation */}

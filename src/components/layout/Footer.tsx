@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Link to="/" className="text-2xl font-bold text-gradient mb-6 block">
-              TechVisionForge
+             FromScratchs.com
             </Link>
             <p className="text-muted-foreground mb-6 max-w-xs">
               Building innovative solutions for businesses of all sizes with cutting-edge technology.
@@ -61,16 +61,16 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <Mail size={18} className="text-tech-purple mt-1" />
-                <span>contact@techvisionforge.com</span>
+                <span>fromcatchs@gmail.com</span>
               </div>
               <div className="flex items-start space-x-3">
                 <Phone size={18} className="text-tech-purple mt-1" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 99999#####</span>
               </div>
               <address className="text-muted-foreground not-italic">
-                123 Innovation Drive<br />
-                Tech Valley, CA 94043<br />
-                United States
+                Guntur<br />
+                ArundalPet<br />
+                Andhra Pradesh, India
               </address>
             </div>
           </div>
@@ -79,7 +79,7 @@ const Footer = () => {
         <div className="border-t border-border/50 mt-12 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm">
-              &copy; {new Date().getFullYear()} TechVisionForge. All rights reserved.
+              &copy; {new Date().getFullYear()} fromscratchs.com All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm mt-4 md:mt-0">
               <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">

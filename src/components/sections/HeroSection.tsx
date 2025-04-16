@@ -43,11 +43,11 @@ const HeroSection = () => {
         <div className="mt-20 w-full max-w-4xl animate-slide-up opacity-0" style={{ animationDelay: "1s", animationFillMode: "forwards" }}>
           <p className="text-center text-muted-foreground mb-6">Trusted by innovative companies</p>
           <div className="flex flex-wrap justify-center gap-8 md:gap-12 opacity-70">
-            <TechLogo name="Adobe" />
-            <TechLogo name="Shopify" />
+            {/* <TechLogo name="Coming soon" /> */}
+            {/* <TechLogo name="Shopify" />
             <TechLogo name="Spotify" />
             <TechLogo name="Slack" />
-            <TechLogo name="Google" />
+            <TechLogo name="Google" /> */}
           </div>
         </div>
       </div>
