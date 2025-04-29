@@ -1,9 +1,11 @@
 
-export interface FormData {
+export interface ContactFormData {
   name: string;
   email: string;
+  phone: string;
+  title: string;
   company: string;
-  requirements: string;
+  description: string;
   file: File | null;
 }
 

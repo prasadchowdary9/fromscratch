@@ -6,17 +6,22 @@ import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import FileUpload from './FileUpload';
 import FormField from './components/FormField';
-import { FormData } from './types/form-types';
+
 import { validateForm } from './utils/form-validation';
+import { Description } from '@radix-ui/react-dialog';
+import {ContactFormData} from './types/form-types';
+import { CheckCircle } from "lucide-react";
 
 const ContactForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [ContactFormData, setContactFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     company: '',
-    requirements: '',
+    phone:'',
+    title:'',
+    description: '',
     file: null,
   });
   const [errors, setErrors] = useState<{[key: string]: string}>({});
@@ -24,7 +29,7 @@ const ContactForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setContactFormData(prev => ({ ...prev, [name]: value }));
     
     if (errors[name]) {
       setErrors(prev => {
@@ -38,7 +43,7 @@ const ContactForm = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setFormData(prev => ({ ...prev, file }));
+      setContactFormData(prev => ({ ...prev, file }));
       setFileName(file.name);
       
       if (errors['file']) {
@@ -53,35 +58,92 @@ const ContactForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const newErrors = validateForm(formData);
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    
+  
+    // Validate form if needed
+    // const newErrors = validateForm(ContactFormData);
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors);
+    //   return;
+    // }
+  
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    
-    toast({
-      title: "Message sent successfully!",
-      description: "We'll get back to you within 24-48 hours.",
-      duration: 5000,
-    });
-    
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      requirements: '',
-      file: null,
-    });
-    setFileName('');
+  
+    const form = new FormData();  // Corrected: Use FormData, not ContactFormData
+  
+    form.append('name', ContactFormData.name);
+    form.append('email', ContactFormData.email);
+    form.append('company', ContactFormData.company);
+    form.append('title', ContactFormData.title);
+    form.append('description', ContactFormData.description);
+    form.append('phoneNumber', ContactFormData.phone);
+  
+    if (ContactFormData.file) {
+      form.append('file', ContactFormData.file);
+    }
+  
+    try {
+      const response = await fetch('http://localhost:8181/api/documents/upload', {
+        method: 'POST',
+        body: form, // ⚠️ Don't set Content-Type manually!
+      });
+  
+      if (response.ok) {
+        toast({
+          title: "Message sent successfully!",
+          description: "We'll get back to you within 1 hour.",
+          duration: 5000,
+        });
+      }
+  
+      // Optionally, delay the toast to mimic some async action (e.g., network latency)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+  
+      // Trigger success toast after successful upload
+      toast({
+        title: "Message sent successfully!",
+        description: "We'll get back to you within 1 hour.",
+        duration: 5000,
+      });
+  
+      // Reset form data after successful submission
+      setContactFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        title: '',
+        description: '',
+        file: null,
+      });
+      setFileName('');
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      
+
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-5 h-5 text-red-600" />
+            <span>Error uploading document</span>
+          </div>
+        ),
+        description: "plz upload a small size file ",
+        duration: 5000,
+        className: "bg-red-100 text-red-800",
+      });
+      
+  
+      // Show an error toast if something goes wrong
+     
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
+  
 
   const clearFile = () => {
-    setFormData(prev => ({ ...prev, file: null }));
+    setContactFormData(prev => ({ ...prev, file: null }));
     setFileName('');
   };
 
@@ -91,41 +153,60 @@ const ContactForm = () => {
         <FormField
           label="Name"
           name="name"
-          value={formData.name}
+          value={ContactFormData.name}
           onChange={handleChange}
           error={errors.name}
           placeholder="Your name"
         />
         
         <FormField
+          label="Phone"
+          name="phone"
+          value={ContactFormData.phone}
+          onChange={handleChange}
+          error={errors.phone}
+          placeholder="Your phone number"
+        />
+        
+        <FormField
           label="Email"
           name="email"
           type="email"
-          value={formData.email}
+          value={ContactFormData.email}
           onChange={handleChange}
           error={errors.email}
           placeholder="your.email@example.com"
         />
         
+        <FormField
+          label="Title"
+          name="title"
+          value={ContactFormData.title}
+          onChange={handleChange}
+          error={errors.title}
+          placeholder="Your project title"
+        />
+        
         <div className="md:col-span-2">
           <FormField
-            label="Company"
+            label="Company/College"
             name="company"
-            value={formData.company}
+            value={ContactFormData.company}
             onChange={handleChange}
-            placeholder="Your company name (optional)"
+            placeholder="Your company or college name (optional)"
           />
         </div>
         
         <div className="md:col-span-2">
+          
           <FormField
-            label="Project Requirements"
-            name="requirements"
+            label="Description"
+            name="description"
             type="textarea"
-            value={formData.requirements}
+            value={ContactFormData.description}
             onChange={handleChange}
-            error={errors.requirements}
-            placeholder="Tell us about your project and requirements"
+            error={errors.description}
+            placeholder="Your project description"    
           />
         </div>
         

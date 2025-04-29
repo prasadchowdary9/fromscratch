@@ -50,8 +50,8 @@ const teamMembers = [
     }
   },
   {
-    name: "Moin Basha",
-    role: "Full Stack Developer",
+    name: "Moinbasha",
+    role: "Backend Developer & Spring Boot Expert",
     image: image,
     description: "Develops both the frontend and backend of the application, ensuring seamless integration and providing a complete solution from UI to server-side logic.",
     social: {

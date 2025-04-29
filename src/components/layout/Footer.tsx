@@ -61,11 +61,12 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <Mail size={18} className="text-tech-purple mt-1" />
-                <span>fromcatchs@gmail.com</span>
+                <span>mvprasad2023@gmail.com</span>
               </div>
               <div className="flex items-start space-x-3">
                 <Phone size={18} className="text-tech-purple mt-1" />
-                <span>+91 99999#####</span>
+                <span>+91 6301924983</span>
+                <span>+91 8309017207</span>
               </div>
               <address className="text-muted-foreground not-italic">
                 Guntur<br />
