@@ -1,16 +1,13 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import FileUpload from './FileUpload';
 import FormField from './components/FormField';
-
+import axios from 'axios';
 import { validateForm } from './utils/form-validation';
-import { Description } from '@radix-ui/react-dialog';
-import {ContactFormData} from './types/form-types';
-import { CheckCircle } from "lucide-react";
+import { ContactFormData } from './types/form-types';
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -19,21 +16,38 @@ const ContactForm = () => {
     name: '',
     email: '',
     company: '',
-    phone:'',
-    title:'',
+    phone: '',
+    title: '',
     description: '',
     file: null,
   });
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [fileName, setFileName] = useState('');
+
+  // 🔥 Your requested useEffect to hit the API every 40 secs
+  useEffect(() => {
+    const fetchWelcome = async () => {
+      try {
+        const response = await axios.get('https://fromscracesproject-1.onrender.com/api/documents/welcome');
+        console.log('Welcome API response:', response.data);
+      } catch (error) {
+        console.error('Error fetching welcome API:', error);
+      }
+    };
+
+    fetchWelcome(); // Initial call
+    const interval = setInterval(fetchWelcome, 40000); // Call every 40 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setContactFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (errors[name]) {
       setErrors(prev => {
-        const newErrors = {...prev};
+        const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
@@ -45,10 +59,10 @@ const ContactForm = () => {
       const file = e.target.files[0];
       setContactFormData(prev => ({ ...prev, file }));
       setFileName(file.name);
-      
+
       if (errors['file']) {
         setErrors(prev => {
-          const newErrors = {...prev};
+          const newErrors = { ...prev };
           delete newErrors['file'];
           return newErrors;
         });
@@ -58,35 +72,26 @@ const ContactForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    // Validate form if needed
-    // const newErrors = validateForm(ContactFormData);
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   return;
-    // }
-  
     setIsSubmitting(true);
-  
-    const form = new FormData();  // Corrected: Use FormData, not ContactFormData
-  
+
+    const form = new FormData();
     form.append('name', ContactFormData.name);
     form.append('email', ContactFormData.email);
     form.append('company', ContactFormData.company);
     form.append('title', ContactFormData.title);
     form.append('description', ContactFormData.description);
     form.append('phoneNumber', ContactFormData.phone);
-  
+
     if (ContactFormData.file) {
       form.append('file', ContactFormData.file);
     }
-  
+
     try {
-      const response = await fetch('http://localhost:8181/api/documents/upload', {
+      const response = await fetch('https://fromscracesproject-1.onrender.com/api/documents/upload', {
         method: 'POST',
-        body: form, // ⚠️ Don't set Content-Type manually!
+        body: form,
       });
-  
+
       if (response.ok) {
         toast({
           title: "Message sent successfully!",
@@ -94,18 +99,15 @@ const ContactForm = () => {
           duration: 5000,
         });
       }
-  
-      // Optionally, delay the toast to mimic some async action (e.g., network latency)
+
       await new Promise(resolve => setTimeout(resolve, 1000));
-  
-      // Trigger success toast after successful upload
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 1 hour.",
         duration: 5000,
       });
-  
-      // Reset form data after successful submission
+
       setContactFormData({
         name: '',
         email: '',
@@ -118,7 +120,6 @@ const ContactForm = () => {
       setFileName('');
     } catch (error) {
       console.error('Error uploading document:', error);
-      
 
       toast({
         title: (
@@ -127,20 +128,14 @@ const ContactForm = () => {
             <span>Error uploading document</span>
           </div>
         ),
-        description: "plz upload a small size file ",
+        description: "Please upload a smaller size file.",
         duration: 5000,
         className: "bg-red-100 text-red-800",
       });
-      
-  
-      // Show an error toast if something goes wrong
-     
     } finally {
       setIsSubmitting(false);
     }
   };
-  
-  
 
   const clearFile = () => {
     setContactFormData(prev => ({ ...prev, file: null }));
@@ -149,6 +144,7 @@ const ContactForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Form Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           label="Name"
@@ -158,7 +154,6 @@ const ContactForm = () => {
           error={errors.name}
           placeholder="Your name"
         />
-        
         <FormField
           label="Phone"
           name="phone"
@@ -167,7 +162,6 @@ const ContactForm = () => {
           error={errors.phone}
           placeholder="Your phone number"
         />
-        
         <FormField
           label="Email"
           name="email"
@@ -177,7 +171,6 @@ const ContactForm = () => {
           error={errors.email}
           placeholder="your.email@example.com"
         />
-        
         <FormField
           label="Title"
           name="title"
@@ -186,7 +179,6 @@ const ContactForm = () => {
           error={errors.title}
           placeholder="Your project title"
         />
-        
         <div className="md:col-span-2">
           <FormField
             label="Company/College"
@@ -196,9 +188,7 @@ const ContactForm = () => {
             placeholder="Your company or college name (optional)"
           />
         </div>
-        
         <div className="md:col-span-2">
-          
           <FormField
             label="Description"
             name="description"
@@ -206,10 +196,9 @@ const ContactForm = () => {
             value={ContactFormData.description}
             onChange={handleChange}
             error={errors.description}
-            placeholder="Your project description"    
+            placeholder="Your project description"
           />
         </div>
-        
         <div className="md:col-span-2">
           <Label>Attachments (Optional)</Label>
           <div className="mt-2">
@@ -221,16 +210,17 @@ const ContactForm = () => {
           </div>
         </div>
       </div>
-      
+
+      {/* Submit Button */}
       <div className="mt-8 flex justify-center">
-        <Button 
+        <Button
           type="submit"
           className="bg-tech-purple hover:bg-tech-purple/80 w-full md:w-auto md:px-12"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Sending...
             </>
           ) : (
