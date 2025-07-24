@@ -40,7 +40,7 @@ const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
   const fetchDocuments = async () => {
     setLoading(true);
     try {
-      const res = await fetch("https://fromscracesproject-9.onrender.com/api/documents/getAll");
+      const res = await fetch("https://fromscracesproject-16.onrender.com/api/documents/getAll");
       if (!res.ok) throw new Error("Failed to fetch documents");
       const data = await res.json();
       setDocuments(data.reverse());
